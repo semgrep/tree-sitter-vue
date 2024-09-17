@@ -1,26 +1,19 @@
-#include <tree_sitter/parser.h>
-
-#include "./tree_sitter_html/scanner.cc"
-
-extern "C" {
+#include "./tree_sitter_html/scanner.c"
 
 void *tree_sitter_vue_external_scanner_create() {
-  return new Scanner();
+  return tree_sitter_html_external_scanner_create();
 }
 
 void tree_sitter_vue_external_scanner_destroy(void *payload) {
-  Scanner *scanner = static_cast<Scanner *>(payload);
-  delete scanner;
+  tree_sitter_html_external_scanner_destroy(payload);
 }
 
 unsigned tree_sitter_vue_external_scanner_serialize(void *payload, char *buffer) {
-  Scanner *scanner = static_cast<Scanner *>(payload);
-  return scanner->serialize(buffer);
+  return tree_sitter_html_external_scanner_serialize(payload, buffer);
 }
 
 void tree_sitter_vue_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
-  Scanner *scanner = static_cast<Scanner *>(payload);
-  scanner->deserialize(buffer, length);
+  tree_sitter_html_external_scanner_deserialize(payload, buffer, length);
 }
 
 bool tree_sitter_vue_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
@@ -57,8 +50,6 @@ bool tree_sitter_vue_external_scanner_scan(void *payload, TSLexer *lexer, const 
       }
     }
   }
-  Scanner *scanner = static_cast<Scanner *>(payload);
-  return scanner->scan(lexer, valid_symbols);
-}
-
+  Scanner *scanner = (Scanner *)(payload);
+  return scan(scanner, lexer, valid_symbols);
 }
